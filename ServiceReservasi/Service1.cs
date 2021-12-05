@@ -49,18 +49,18 @@ namespace ServiceReservasi
             return LokasiFull;
         }
 
-        public string editPemesanan(string IDpemesanan, string NamaCustomer)
+        public string editPemesanan(string IDPemesanan, string NamaCustomer)
         {
             throw new NotImplementedException();
         }
 
-        public string pemesanan(string IDpemesanan, string NamaCustomer, string NoTelpon, int JumlahPemesanan, string IDLokasi)
+        public string pemesanan(string IDPemesanan, string NamaCustomer, string NoTelpon, int JumlahPemesanan, string IDLokasi)
         {
             {
                 string a = "gagal";
                 try
                 {
-                    string sql = "insert into dbo.Pemesanan value = '" + IDpemesanan + "', '" + NamaCustomer + "', '" + NoTelpon +"', " + JumlahPemesanan + "', '" + IDLokasi + "')";
+                    string sql = "insert into dbo.Pemesanan values = '" + IDPemesanan + "', '" + NamaCustomer + "', '" + NoTelpon +"', " + JumlahPemesanan + "', '" + IDLokasi + "')";
                     connection = new SqlConnection(constring); //fungsi konek ke db
                     com = new SqlCommand(sql, connection);
                     connection.Open();
