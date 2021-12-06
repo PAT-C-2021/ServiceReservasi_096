@@ -56,11 +56,11 @@ namespace ServiceReservasi
 
         public string pemesanan(string IDPemesanan, string NamaCustomer, string NoTelpon, int JumlahPemesanan, string IDLokasi)
         {
-            {
+          
                 string a = "gagal";
                 try
                 {
-                    string sql = "insert into dbo.Pemesanan values = '" + IDPemesanan + "', '" + NamaCustomer + "', '" + NoTelpon +"', " + JumlahPemesanan + "', '" + IDLokasi + "')";
+                    string sql = "insert into dbo.Pemesanan values = ('" + IDPemesanan + "', '" + NamaCustomer + "', '" + NoTelpon +"', " + JumlahPemesanan + "', '" + IDLokasi + "')";
                     connection = new SqlConnection(constring); //fungsi konek ke db
                     com = new SqlCommand(sql, connection);
                     connection.Open();
@@ -73,7 +73,7 @@ namespace ServiceReservasi
                     Console.WriteLine(es);
                 }
                 return a;
-            }
+        
         }
 
         public List<Pemesanan> Pemesanan()
