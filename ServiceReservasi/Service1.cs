@@ -49,7 +49,7 @@ namespace ServiceReservasi
             List<Pemesanan> pemesanans = new List<Pemesanan>();
             try
             {
-                string sql = "select ID_reservasi, Nama_customer, No_telpon, Jumlah_pemesanan, Nama_Lokasi FROM dbo.Pemesanan p join dbo. p.ID_lokasi = l.ID_lokasi";
+                string sql = "select ID_reservasi, Nama_customer, No_telepon, Jumlah_pemesanan, ID_lokasi FROM dbo.Pemesanan p join dbo. p.ID_lokasi = l.ID_lokasi";
                 connection = new SqlConnection(constring);
                 comm = new SqlCommand(sql, connection);
                 connection.Open();
@@ -61,7 +61,7 @@ namespace ServiceReservasi
                     data.NamaCustomer = reader.GetString(1);
                     data.NoTelepon = reader.GetString(2);
                     data.JumlahPemesanan = reader.GetInt32(3);
-                    data.Lokasi = reader.GetString(4);
+                    data.IDLokasi = reader.GetString(4);
                     pemesanans.Add(data);
 
                 }
@@ -74,12 +74,12 @@ namespace ServiceReservasi
             return pemesanans;
         }
 
-        public string pemesanan(string IDPemesanan, string NamaCustomer, string NoTelpon, int JumlahPemesanan, string IDLokasi)
+        public string pemesanan(string IDPemesanan, string NamaCustomer, string NoTelepon, int JumlahPemesanan, string IDLokasi)
         {
             string n = "gagal";
             try
             {
-                string sql = "INSERT INTO dbo.Pemesanan VALUES('" + IDPemesanan + "','" + NamaCustomer + "','" + NoTelpon + "'," + JumlahPemesanan + ",'" + IDLokasi + "')";
+                string sql = "INSERT INTO dbo.Pemesanan VALUES('" + IDPemesanan + "','" + NamaCustomer + "','" + NoTelepon + "'," + JumlahPemesanan + ",'" + IDLokasi + "')";
                 connection = new SqlConnection(constring);
                 comm = new SqlCommand(sql, connection);
                 connection.Open();
@@ -103,12 +103,12 @@ namespace ServiceReservasi
             return n;
         }
 
-        public string editPemesanan(string IDPemesanan, string NamaCustomer, string No_telpon)
+        public string editPemesanan(string IDPemesanan, string NamaCustomer, string No_telepon)
         {
             string n = "gagal";
             try
             {
-                string sql = "UPDATE dbo.Pemesanan SET Nama_customer = '" + NamaCustomer + "', No_telpon = '" + No_telpon + "' WHERE ID_reservasi = '" + IDPemesanan + "' ";
+                string sql = "UPDATE dbo.Pemesanan SET Nama_customer = '" + NamaCustomer + "', No_telepon = '" + No_telepon + "' WHERE ID_reservasi = '" + IDPemesanan + "' ";
                 connection = new SqlConnection(constring);
                 comm = new SqlCommand(sql, connection);
                 connection.Open();
@@ -143,6 +143,117 @@ namespace ServiceReservasi
                 Console.WriteLine(ex);
             }
             return n;
+        }
+        public string Login(string username, string password)
+        {
+            string kategori = "";
+
+            string sql = "select kategori from Login where username='" + username + "' and Password='" + password + "'";
+            connection = new SqlConnection(constring);
+            comm = new SqlCommand(sql, connection);
+            connection.Open();
+            SqlDataReader reader = comm.ExecuteReader();
+            while (reader.Read())
+            {
+                kategori = reader.GetString(0);
+            }
+            return kategori;
+        }
+
+        public string Register(string username, string password, string kategori)
+        {
+            try
+            {
+                string sql = "insert into Login values('" + username + "','" + password + "','" + kategori + "')";
+                connection = new SqlConnection(constring);
+                comm = new SqlCommand(sql, connection);
+                connection.Open();
+                comm.ExecuteNonQuery();
+                connection.Close();
+
+                return "sukses";
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
+        }
+
+        public string UpdateRegister(string username, string password, string kategori, int id)
+        {
+            try
+            {
+                string sql2 = "update Login SET Username='" + username + "', Password = '" + password + "', Kategori = '" + kategori + "'" + "where ID_login = " + id + "";
+                connection = new SqlConnection(constring);
+                comm = new SqlCommand(sql2, connection);
+                connection.Open();
+                comm.ExecuteNonQuery();
+                connection.Close();
+
+                return "sukses";
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
+        }
+
+        public string DeleteRegister(string username)
+        {
+            try
+            {
+                int id = 0;
+                string sql = "select ID_login from dbo.Login where Username = '" + username + "'";
+                connection = new SqlConnection(constring);
+                comm = new SqlCommand(sql, connection);
+                connection.Open();
+                SqlDataReader reader = comm.ExecuteReader();
+                while (reader.Read())
+                {
+                    id = reader.GetInt32(0);
+                }
+                connection.Close();
+                string sql2 = "delete from Login where ID_login=" + id + "";
+                connection = new SqlConnection(constring);
+                comm = new SqlCommand(sql2, connection);
+                connection.Open();
+                comm.ExecuteNonQuery();
+                connection.Close();
+
+                return "sukses";
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
+        }
+
+        public List<DataRegister> DataRegist()
+        {
+            List<DataRegister> list = new List<DataRegister>();
+            try
+            {
+                string sql = "select ID_login, Username, Password , Kategori from Login";
+                connection = new SqlConnection(constring);
+                comm = new SqlCommand(sql, connection);
+                connection.Open();
+                SqlDataReader reader = comm.ExecuteReader();
+                while (reader.Read())
+                {
+                    DataRegister data = new DataRegister();
+                    data.id = reader.GetInt32(0);
+                    data.username = reader.GetString(1);
+                    data.password = reader.GetString(2);
+                    data.kategori = reader.GetString(3);
+                    list.Add(data);
+                }
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                e.ToString();
+            }
+            return list;
         }
     }
 }
